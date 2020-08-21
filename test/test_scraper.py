@@ -1,6 +1,6 @@
 import os
 import pytest
-from annotator.scraper import (
+from scraper import (
     get_search_result_urls,
     download_video,
     video_to_image_frames,
@@ -48,9 +48,10 @@ def test_write_video_image_frames():
     }
     success, metadata_out = video_to_image_frames(metadata_in)
     assert success == True
+
     assert metadata_out == {
         "video_filename": "video.mp4",
-        "path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8",
+        "path": f"{os.getcwd()}/tmp/aWg1nG2AbA8",
         "video_id": "aWg1nG2AbA8",
         "title": "5 3D Printing Mistakes you WILL make - and how to avoid them! 3D Printing 101",
         "url": "https://www.youtube.com/watch?v=aWg1nG2AbA8",
@@ -61,7 +62,7 @@ def test_write_video_image_frames():
             "resolution": "480p",
         },
         "frame_count": 15244,
-        "frame_path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8/frames",
+        "frame_path": f"{os.getcwd()}/tmp/aWg1nG2AbA8/frames",
     }
 
 
@@ -69,7 +70,7 @@ def test_write_video_image_frames():
 def test_skip_write_video_image_frames():
     metadata_in = {
         "video_filename": "video.mp4",
-        "path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8",
+        "path": f"{os.getcwd()}/tmp/aWg1nG2AbA8",
         "video_id": "aWg1nG2AbA8",
         "title": "5 3D Printing Mistakes you WILL make - and how to avoid them! 3D Printing 101",
         "url": "https://www.youtube.com/watch?v=aWg1nG2AbA8",
@@ -80,13 +81,13 @@ def test_skip_write_video_image_frames():
             "resolution": "480p",
         },
         "frame_count": 15244,
-        "frame_path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8/frames",
+        "frame_path": f"{os.getcwd()}/tmp/aWg1nG2AbA8/frames",
     }
     success, metadata_out = video_to_image_frames(metadata_in)
     assert success == False
     assert metadata_out == {
         "video_filename": "video.mp4",
-        "path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8",
+        "path": f"{os.getcwd()}/tmp/aWg1nG2AbA8",
         "video_id": "aWg1nG2AbA8",
         "title": "5 3D Printing Mistakes you WILL make - and how to avoid them! 3D Printing 101",
         "url": "https://www.youtube.com/watch?v=aWg1nG2AbA8",
@@ -97,5 +98,5 @@ def test_skip_write_video_image_frames():
             "resolution": "480p",
         },
         "frame_count": 15244,
-        "frame_path": "/home/leigh/projects/youtube-data-annotator/tmp/aWg1nG2AbA8/frames",
+        "frame_path": f"{os.getcwd()}/tmp/aWg1nG2AbA8/frames",
     }

@@ -88,7 +88,7 @@ def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/imag
     while success:
         cv2.imwrite(f"{out_path}/{count}.jpg", image)
         success, image = vidcap.read()
-        logger.info(f"Read a new frame: {count} success: {success}")
+        logger.debug(f"Read a new frame: {count} success: {success}")
         count += 1
 
     metadata["frame_count"] = count
@@ -96,6 +96,7 @@ def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/imag
     with open(metadata_file, "w+") as f:
         json.dump(metadata, f, indent=2)
 
+    
     return True, metadata
 
 
