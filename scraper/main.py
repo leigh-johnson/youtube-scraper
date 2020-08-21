@@ -96,7 +96,6 @@ def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/imag
     with open(metadata_file, "w+") as f:
         json.dump(metadata, f, indent=2)
 
-    
     return True, metadata
 
 
