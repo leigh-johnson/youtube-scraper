@@ -68,7 +68,12 @@ def download_video(url: str, path: str = f"{os.getcwd()}/tmp/") -> str:
     return metadata
 
 
-def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/images"):
+def video_to_image_frames(
+    metadata: dict,
+    folder: str = f"{os.getcwd()}/tmp/images",
+    start_frame_percent: float = 0.0,
+    end_frame_percent: float = 1.0,
+):
 
     metadata_file = os.path.join(metadata["path"], "metadata.json")
 
@@ -78,6 +83,13 @@ def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/imag
 
     video_path = os.path.join(metadata["path"], metadata["video_filename"])
     vidcap = cv2.VideoCapture(video_path)
+    total_frames = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+    start_frame = round(total_frames * start_frame_percent)
+    end_frame = round(total_frames * end_frame_percent) - start_frame
+
+    vidcap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+
     success, image = vidcap.read()
     count = 0
 
@@ -85,7 +97,7 @@ def video_to_image_frames(metadata: dict, folder: str = f"{os.getcwd()}/tmp/imag
     if not os.path.exists(out_path):
         os.makedirs(out_path)
 
-    while success:
+    while success and count < end_frame:
         cv2.imwrite(f"{out_path}/{count}.jpg", image)
         success, image = vidcap.read()
         logger.debug(f"Read a new frame: {count} success: {success}")

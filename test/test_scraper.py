@@ -66,8 +66,44 @@ def test_write_video_image_frames():
     }
 
 
+# offset by a percentage of frames
+def test_skip_percentage_offset_written_video_image_frames():
+    metadata_in = {
+        "video_filename": "video.mp4",
+        "path": f"{os.getcwd()}/tmp/aWg1nG2AbA8",
+        "video_id": "aWg1nG2AbA8",
+        "title": "5 3D Printing Mistakes you WILL make - and how to avoid them! 3D Printing 101",
+        "url": "https://www.youtube.com/watch?v=aWg1nG2AbA8",
+        "stream": {
+            "mime_type": "video/mp4",
+            "fps": 30,
+            "video_codec": "avc1.4d401f",
+            "resolution": "480p",
+        },
+    }
+    success, metadata_out = video_to_image_frames(
+        metadata_in, start_frame_percent=0.25, end_frame_percent=0.75
+    )
+    assert success == True
+    assert metadata_out == {
+        "video_filename": "video.mp4",
+        "path": "/home/leigh/projects/youtube-scraper/tmp/aWg1nG2AbA8",
+        "video_id": "aWg1nG2AbA8",
+        "title": "5 3D Printing Mistakes you WILL make - and how to avoid them! 3D Printing 101",
+        "url": "https://www.youtube.com/watch?v=aWg1nG2AbA8",
+        "stream": {
+            "mime_type": "video/mp4",
+            "fps": 30,
+            "video_codec": "avc1.4d401f",
+            "resolution": "480p",
+        },
+        "frame_count": 7622,
+        "frame_path": "/home/leigh/projects/youtube-scraper/tmp/aWg1nG2AbA8/frames",
+    }
+
+
 # skip writing frames if metadata already includes frame_count
-def test_skip_write_video_image_frames():
+def test_skip_already_written_video_image_frames():
     metadata_in = {
         "video_filename": "video.mp4",
         "path": f"{os.getcwd()}/tmp/aWg1nG2AbA8",
