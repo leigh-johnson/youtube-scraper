@@ -67,6 +67,7 @@ def test_write_video_image_frames():
 
 
 # offset by a percentage of frames
+@pytest.mark.slow
 def test_skip_percentage_offset_written_video_image_frames():
     metadata_in = {
         "video_filename": "video.mp4",
