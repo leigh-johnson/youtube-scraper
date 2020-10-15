@@ -69,7 +69,7 @@ def download_video(url: str, path: str = f"{os.getcwd()}/tmp/", callback=None) -
         yt.register_on_complete_callback(callback)
 
     out = yt.streams.filter(
-        type="video", subtype="mp4", res="480p", adaptive=True
+        type="video", subtype="mp4", res="720p", adaptive=True
     ).first()
 
     video_id = yt.video_id
@@ -118,7 +118,7 @@ async def download_video_async(
 
 @run_in_executor
 def video_to_image_frames(
-    metadata: dict, start_frame_percent: float = 0.0, end_frame_percent: float = 1.0
+    metadata: dict, start_frame_percent: float = 0.0, end_frame_percent: float = 1.0, downsample_fps=2
 ):
     logger.info(f"Extracting frames from {metadata}")
     metadata_file = os.path.join(metadata["path"], "metadata.json")
@@ -129,6 +129,7 @@ def video_to_image_frames(
 
     video_path = os.path.join(metadata["path"], metadata["video_filename"])
     vidcap = cv2.VideoCapture(video_path)
+
     total_frames = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)
 
     start_frame = round(total_frames * start_frame_percent)
@@ -142,9 +143,11 @@ def video_to_image_frames(
     out_path = metadata["path"] + "/frames"
     if not os.path.exists(out_path):
         os.makedirs(out_path)
-
+    
+    stream_fps = metadata['stream']['fps']
     while success and count < end_frame:
-        cv2.imwrite(f"{out_path}/{count}.jpg", image)
+        if count%(stream_fps/downsample_fps) == 0:
+            cv2.imwrite(f"{out_path}/{count}.jpg", image)
         success, image = vidcap.read()
         logger.debug(f"Read a new frame: {count} success: {success}")
         count += 1

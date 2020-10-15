@@ -57,14 +57,15 @@ async def video(query, limit, out):
 @click.argument("query")
 @click.option(
     "--limit",
-    default=10,
+    default=20,
     help="Limit number of search results. Use with offset to page through query results.",
 )
 @click.option("--out", default=f"{os.getcwd()}/tmp/")
 @click.option("--start-percent", default=0.15)
 @click.option("--end-percent", default=0.85)
+@click.option("--downsample-fps", default=2)
 @coro
-async def frames(query, limit, out, start_percent, end_percent):
+async def frames(query, limit, out, start_percent, end_percent, downsample_fps):
     logging.info(f"Begin downloading videos {limit} matching query {query}")
     urls = await get_search_result_urls_v2(query, limit=limit)
     logging.info(f"Found {len(urls)} results")
@@ -77,7 +78,8 @@ async def frames(query, limit, out, start_percent, end_percent):
     successful = list(filter(lambda x: not isinstance(x, Exception), results))
     frame_tasks = [
         video_to_image_frames_async(
-            m, start_frame_percent=start_percent, end_frame_percent=end_percent
+            m, start_frame_percent=start_percent, end_frame_percent=end_percent,
+            downsample_fps=downsample_fps
         )
         for m in successful
     ]
